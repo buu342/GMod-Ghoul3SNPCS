@@ -153,7 +153,7 @@ function ENT:RebuildPhysics( )
 	self.ConstraintSystem = nil
 
 	local size = 16
-	self:PhysicsInitSphere( size, "rubber" )
+	self:PhysicsInitSphere( size, "default_silent" )
 	self:SetCollisionBounds( Vector( -size, -size, -size ), Vector( size, size, size-48 ) )
 
 	self:PhysWake()
@@ -231,9 +231,9 @@ function ENT:Draw()
 	local lcolor = render.ComputeLighting( pos, Vector( 0, 0, 1 ) )
 	local c = Vector(1,1,1)
 
-	lcolor.x = c.r * ( math.Clamp( lcolor.x, 0, 1 ) + 0.5 ) * 255
-	lcolor.y = c.g * ( math.Clamp( lcolor.y, 0, 1 ) + 0.5 ) * 255
-	lcolor.z = c.b * ( math.Clamp( lcolor.z, 0, 1 ) + 0.5 ) * 255
+	lcolor.x = c.r * ( math.Clamp( lcolor.x, 0, 1 ) + 0.2 ) * 255
+	lcolor.y = c.g * ( math.Clamp( lcolor.y, 0, 1 ) + 0.2 ) * 255
+	lcolor.z = c.b * ( math.Clamp( lcolor.z, 0, 1 ) + 0.2 ) * 255
 	
 	local width = mat:Width()/1.2
 	local height = 10

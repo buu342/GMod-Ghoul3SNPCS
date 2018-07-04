@@ -12,6 +12,8 @@ ENT.Spawnable = false
 ENT.AdminOnly = false
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
+ENT.HitAbleTransparency = 200
+
 ENT.HP = 1
 
 function ENT:SetupDataTables()
@@ -62,11 +64,10 @@ function ENT:Initialize()
 	self.countframe = 1
 	self:SetState("Idle")
 	self:SetHP(self.HP)
-
+	
 	if ( CLIENT ) then return end
 
 	self:SetModel( "models/hunter/misc/sphere175x175.mdl" )
-	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	self:RebuildPhysics()
 	self:SetJumpTime(2)
 	self:SetJumpAngle(math.Rand(0,2*3.14159))
@@ -84,18 +85,22 @@ function ENT:Think()
 		self:SetState("Idle")
 	end
 	
-	if self:GetTransparency() < 128 then
-		self:SetCollisionGroup(COLLISION_GROUP_NONE)
-	else
-		self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-	end
-	
 	if SERVER then
 		local physobj = self:GetPhysicsObject()
+		if self:GetTransparency() < self.HitAbleTransparency then
+			self:SetCollisionGroup(COLLISION_GROUP_NONE)
+			physobj:SetVelocity(Vector(0,0,0))
+			physobj:Sleep()
+			self:SetNotSolid(true)
+		else
+			self:SetNotSolid(false)
+			physobj:Wake()
+			physobj:SetVelocity(Vector(0,0,-128))
+			self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		end
 		
 		if self:GetState() == "Idle" then
 			self:SetTransparency(0)
-			physobj:SetVelocity(Vector(0,0,-128))
 			if IsValid(ply) && self:GetJumpTime() < 0.2 then
 				ply:Kill()
 				ply:EmitSound("ghouls/yurei/SUPERC4.wav", 75, 100, 1, CHAN_VOICE)
@@ -110,9 +115,8 @@ function ENT:Think()
 		end
 		if self:GetState() == "Jump1" then
 			if IsValid(ply) then
-				physobj:SetVelocity(Vector(0,0,-128))
-				self:SetPos(ply:GetPos() + Vector((256*self:GetJumpTime())*math.sin(self:GetJumpAngle()), (256*self:GetJumpTime())*math.cos(self:GetJumpAngle()), 32))
-				ply:EmitSound("ghouls/yurei/HEART.wav")
+				self:SetPos(ply:GetPos() + Vector((384*self:GetJumpTime())*math.sin(self:GetJumpAngle()), (384*self:GetJumpTime())*math.cos(self:GetJumpAngle()), 32))
+				ply:EmitSound("ghouls/yurei/HEART.wav", 40)
 				self:SetState("Jump2")
 			else
 				self:SetState("Idle")
@@ -121,7 +125,6 @@ function ENT:Think()
 		end
 		if self:GetState() == "Jump2" then
 			self:SetTransparency(self:GetTransparency()+math.Clamp((2-self:GetJumpTime())*64, 75, 128))
-			physobj:SetVelocity(Vector(0,0,-128))
 			if self:GetTransparency() >= 255 then
 				self:SetTransparency(255)
 				self:SetState("Jump3")
@@ -130,7 +133,6 @@ function ENT:Think()
 		end
 		if self:GetState() == "Jump3" then
 			self:SetTransparency(self:GetTransparency()-math.Clamp((2-self:GetJumpTime())*64, 75, 128))
-			physobj:SetVelocity(Vector(0,0,-128))
 			if self:GetTransparency() <= 0 then
 				self:SetTransparency(0)
 				self:SetJumpTime(self:GetJumpTime()*0.9)
@@ -143,7 +145,6 @@ function ENT:Think()
 		
 		if self:GetState() == "Pain" then
 			self:SetTransparency(0)
-			physobj:SetVelocity(Vector(0,0,0))
 			if self:GetCoolDown() < CurTime() then
 				self:SetState("Dying")
 				self:EmitSound("ghouls/yurei/SAMARADI.wav", 75, 100, 1, CHAN_VOICE)
@@ -153,7 +154,7 @@ function ENT:Think()
 		end
 		
 		if self:GetState() == "Dying" then
-			self:SetTransparency(200)
+			self:SetTransparency(self.HitAbleTransparency)
 			local dir = Vector(math.Rand(-0.9,0.9),math.Rand(-0.9,0.9),0)
 			dir:Normalize()
 			physobj:SetVelocity(dir*300)
@@ -177,7 +178,7 @@ function ENT:RebuildPhysics( )
 	self.ConstraintSystem = nil
 
 	local size = 32
-	self:PhysicsInitSphere( size, "rubber" )
+	self:PhysicsInitSphere( size, "default_silent" )
 	//self:PhysicsInitBox(self:GetPos()-Vector(32,0,0), self:GetPos()+Vector(32,0,96))
 	self:SetCollisionBounds( Vector( -size, -size, -size ), Vector( size, size, size+32 ) )
 

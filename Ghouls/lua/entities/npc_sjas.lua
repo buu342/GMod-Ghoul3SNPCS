@@ -15,6 +15,8 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_NONE)
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
 	self:DrawShadow(false)
+	self:SetGravity(0)
+	self:SetNoDraw(true)
 end
 
 function ENT:RunBehaviour()

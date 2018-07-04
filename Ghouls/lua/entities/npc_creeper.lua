@@ -12,9 +12,12 @@ function ENT:Initialize()
 		self.npc:Spawn()
 		self.npc:Activate()
 	end
+	self:DrawShadow(false)
 	self:SetSolid(SOLID_NONE)
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
-	
+	self:DrawShadow(false)
+	self:SetGravity(0)
+	self:SetNoDraw(true)
 end
 
 function ENT:RunBehaviour()
@@ -24,7 +27,6 @@ function ENT:RunBehaviour()
 end
 
 function ENT:Think()
-	self:DrawShadow(false)
 	if !IsValid(self.npc) && SERVER then
 		self:Remove()
 	end

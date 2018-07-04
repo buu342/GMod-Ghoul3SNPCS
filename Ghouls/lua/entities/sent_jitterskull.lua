@@ -3,7 +3,7 @@ AddCSLuaFile()
 DEFINE_BASECLASS( "base_anim" )
 
 ENT.PrintName = "Jitterskull"
-ENT.Name = "Jitterskull"
+ENT.Name = ENT.PrintName
 ENT.Author = "Buu342"
 ENT.Information = "A huge skull with a strange movement pattern and a charge attack."
 ENT.Category = "Ghouls"
@@ -61,12 +61,15 @@ function ENT:Initialize()
 	self.countframe = 1
 	self:SetState("Idle")
 	self:SetHP(self.HP)
+	
+	self.Name = self.PrintName
 
 	if ( CLIENT ) then return end
 
 	self:SetModel( "models/hunter/misc/shell2x2.mdl" )
 	self:RebuildPhysics()
 	self:DrawShadow( false )
+	self:SetName(self.PrintName)
 	
 end
 
@@ -116,8 +119,8 @@ function ENT:Think()
 					dir = dir + Vector(math.Rand(-0.9,0.9),math.Rand(-0.9,0.9),0)
 					dir:Normalize()
 					physobj:SetVelocity(dir*10000000)
-					timer.Simple(0.03, function() if IsValid(physobj) then physobj:SetVelocity(Vector(0,0,0)) end end)
-					self:SetChaseCoolDown(CurTime()+0.5)
+					timer.Simple(0.04, function() if IsValid(physobj) then physobj:SetVelocity(Vector(0,0,0)) end end)
+					self:SetChaseCoolDown(CurTime()+0.7)
 					self:EmitSound("ghouls/jitterskull/chase"..math.random(1,4)..".wav", 65)
 				end
 			end
@@ -154,7 +157,7 @@ function ENT:RebuildPhysics( )
 	self.ConstraintSystem = nil
 
 	local size = 40
-	self:PhysicsInitSphere( size, "rubber" )
+	self:PhysicsInitSphere( size, "default_silent" )
 	//self:PhysicsInitBox(self:GetPos()-Vector(32,0,0), self:GetPos()+Vector(32,0,96))
 	self:SetCollisionBounds( Vector( -size, -size, -size ), Vector( size, size, size+32 ) )
 
@@ -172,8 +175,10 @@ end
 
 function ENT:OnTakeDamage( dmginfo )
 	if self:GetState() != "Dying" then
-		self:SetState("Idle")
-		self:SetCoolDown(CurTime()+0.5)
+		if self:GetState() == "Attack2" then
+			self:SetState("Idle")
+			self:SetCoolDown(CurTime()+0.5)
+		end
 		self:SetHP(self:GetHP() - dmginfo:GetDamage())
 		if self:GetHP() <= 0 then
 			self:SetState("Dying")
@@ -181,7 +186,6 @@ function ENT:OnTakeDamage( dmginfo )
 		end
 	end
 end
-
 
 if ( SERVER ) then return end
 
@@ -213,9 +217,9 @@ function ENT:Draw()
 	local lcolor = render.ComputeLighting( pos, Vector( 0, 0, 1 ) )
 	local c = Vector(1,1,1)
 
-	lcolor.x = c.r * ( math.Clamp( lcolor.x, 0, 1 ) + 0.5 ) * 255
-	lcolor.y = c.g * ( math.Clamp( lcolor.y, 0, 1 ) + 0.5 ) * 255
-	lcolor.z = c.b * ( math.Clamp( lcolor.z, 0, 1 ) + 0.5 ) * 255
+	lcolor.x = c.r * ( math.Clamp( lcolor.x, 0, 1 ) + 0.20 ) * 255
+	lcolor.y = c.g * ( math.Clamp( lcolor.y, 0, 1 ) + 0.20 ) * 255
+	lcolor.z = c.b * ( math.Clamp( lcolor.z, 0, 1 ) + 0.20 ) * 255
 	
 	local height = 96	
 	local offset = 17

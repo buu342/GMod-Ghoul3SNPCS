@@ -216,7 +216,7 @@ function ENT:RebuildPhysics( )
 	self.ConstraintSystem = nil
 
 	local size = 16
-	self:PhysicsInitSphere( size, "rubber" )
+	self:PhysicsInitSphere( size, "default_silent" )
 	//self:PhysicsInitBox(self:GetPos()-Vector(32,0,0), self:GetPos()+Vector(32,0,96))
 	self:SetCollisionBounds( Vector( -size, -size, -size ), Vector( size, size, size+32 ) )
 
