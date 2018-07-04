@@ -1,5 +1,5 @@
 # The Ghouls Forest 3 SNPCs
-##THESE SNPC'S CONTAIN SCARY IMAGERY/NOISES. NOT FOR THE FAINT OF HEART!<br/><br/>
+## THESE SNPC'S CONTAIN SCARY IMAGERY/NOISES. NOT FOR THE FAINT OF HEART!<br/><br/>
 
 4 Ghoul SNPCs, based off of the classic Doom 2 horror WAD The Ghouls Forest 3, created by CutManMike.<br/><br/>
 
