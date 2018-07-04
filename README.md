@@ -40,7 +40,7 @@ Yurei - A slender, stalking figure. The boss of the ghouls.<br/><br/>
 **A:** Custom made for a WIP gamemode.<br/><br/>
 
 **Q:** Where are the ghoul sprites from?<br/>
-**A:** They're taken mostly from halloween masks. [This thread](http://cutstuff.net/forum/index.php?topic=400.msg#msg) contains the information.
+**A:** They're taken mostly from halloween masks. [This thread](http://cutstuff.net/forum/index.php?topic=400.msg#msg) contains the information.<br/><br/>
 
 **Q:** Can you please make X?<br/>
 **A:** No. I'm fine with taking suggestions but don't ask me to make stuff for you. I have my own projects and things to do, and making something for someone I've never met for no incentive whatsoever is not one of them. I am perfectly fine with adding additional content to my current work, however.<br/><br/>
